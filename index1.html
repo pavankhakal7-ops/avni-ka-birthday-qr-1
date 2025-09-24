@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday Avni — Gift</title>
+
+<!-- Optional signature-like font from Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg1:#ff9a9e; --bg2:#fecfef; --bg3:#f6d365; --bg4:#fda085;
+    --accent:#fff8e8;
+    --confetti-colors: #ff5f6d, #ffc371, #9be15d, #00c9ff, #a18cd1;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Poppins", sans-serif;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(120deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));
+    background-size: 400% 400%;
+    animation: bgShift 12s linear infinite;
+  }
+
+  @keyframes bgShift{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  .stage{
+    width: min(900px,95vw);
+    height: min(600px,85vh);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1rem;
+    flex-direction:column;
+    padding:20px;
+  }
+
+  /* Gift box */
+  .gift-wrap{
+    position:relative;
+    width:220px;
+    height:220px;
+    perspective:900px;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .box{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition: transform 600ms cubic-bezier(.2,.9,.3,1);
+  }
+
+  /* Bottom part */
+  .box .base{
+    position:absolute;
+    left:0; top:0; right:0; bottom:0;
+    background: linear-gradient(180deg,#9e2a64 0%, #6b1b43 100%);
+    border-radius:12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform-origin:center;
+    overflow:visible;
+  }
+
+  /* Decorative ribbon vertical */
+  .ribbon-vertical{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top:0; bottom:0;
+    width:26%;
+    background: linear-gradient(180deg,#ffd166,#ff6b6b);
+    border-radius:6px;
+    box-shadow: inset 0 3px 6px rgba(255,255,255,.08);
+  }
+
+  /* Decorative ribbon horizontal */
+  .ribbon-horizontal{
+    position:absolute;
+    top:50%;
+    left:0; right:0;
+    height:20%;
+    transform:translateY(-50%);
+    background: linear-gradient(90deg,#ffd166,#ff6b6b);
+    border-radius:6px;
+    box-shadow: inset 0 3px 6px rgba(255,255,255,.08);
+  }
+
+  /* Lid */
+  .lid{
+    position:absolute;
+    left:0; right:0; top:-12%;
+    height:40%;
+    transform-origin: 50% 100%;
+    border-radius:14px;
+    background: linear-gradient(180deg,#ff8fab,#d0527f);
+    box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    transition: transform 700ms cubic-bezier(.2,.9,.3,1);
+    z-index:5;
+  }
+
+  /* Bow */
+  .bow{
+    position:absolute;
+    top:6%;
+    left:50%;
+    transform:translateX(-50%);
+    width:120px;
+    height:60px;
+    z-index:7;
+  }
+  .bow .loop{
+    position:absolute;
+    width:60px;height:40px;border-radius:40px;
+    background: linear-gradient(90deg,#ffd166,#ff6b6b);
+    top:0;
+  }
+  .bow .loop.left{ left:0; transform: rotate(-22deg); }
+  .bow .loop.right{ right:0; transform: rotate(22deg); }
+  .bow .knot{ position:absolute; left:50%; top:18px; transform:translateX(-50%); width:26px;height:26px;border-radius:6px; background:#fff3d6; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+
+  /* Label under box */
+  .label{
+    margin-top:18px;
+    font-weight:600;
+    color:rgba(255,255,255,0.95);
+    letter-spacing:.6px;
+    text-shadow:0 2px 10px rgba(0,0,0,.18);
+    font-size:18px;
+  }
+
+  /* Confetti pieces */
+  .confetti{
+    position:absolute;
+    pointer-events:none;
+    width:12px;height:18px;
+    opacity:0;
+    will-change:transform,opacity;
+  }
+
+  /* Fireworks canvas covers background */
+  #fwCanvas{
+    position: absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+  }
+
+  /* Jumping happy text */
+  .birthday-text{
+    position: absolute;
+    z-index:20;
+    left:50%; top:50%;
+    transform: translate(-50%,-50%) scale(.8);
+    font-family: "Great Vibes", "Poppins", sans-serif;
+    font-size:48px;
+    color:#fff;
+    text-shadow:
+      0 0 20px rgba(255,255,255,0.2),
+      0 0 40px rgba(255,200,80,0.12),
+      0 8px 30px rgba(0,0,0,0.35);
+    opacity:0;
+    transition: transform 600ms cubic-bezier(.2,.9,.3,1), opacity 300ms ease;
+    pointer-events:none;
+    mix-blend-mode:screen;
+  }
+
+  /* when it appears, it jumps out then zooms */
+  .birthday-text.pop{
+    animation: popUp 900ms cubic-bezier(.2,.9,.3,1) forwards;
+  }
+
+  @keyframes popUp{
+    0%{ opacity:0; transform: translate(-50%,-30%) scale(.6) }
+    35%{ opacity:1; transform: translate(-50%,-45%) scale(1.15) }
+    100%{ opacity:1; transform: translate(-50%,-50%) scale(2.2) }
+  }
+
+  /* Glowing effect when full screen */
+  .birthday-text.full{
+    position:fixed;
+    left:50%; top:50%;
+    font-size: clamp(34px, 8vw, 120px);
+    transform: translate(-50%,-50%) scale(1);
+    text-align:center;
+    z-index:9999;
+    mix-blend-mode: normal;
+    color: #fff;
+    text-shadow:
+      0 0 12px rgba(255,255,255,0.9),
+      0 0 30px rgba(255,200,60,0.6),
+      0 0 60px rgba(255,120,120,0.25),
+      0 10px 40px rgba(0,0,0,0.4);
+    animation: glowPulse 1500ms ease-in-out infinite alternate;
+  }
+
+  @keyframes glowPulse{
+    from{ filter:brightness(0.98) saturate(1) }
+    to{ filter:brightness(1.12) saturate(1.05) }
+  }
+
+  /* small mobile tweaks */
+  @media (max-width:520px){
+    .gift-wrap{ width:180px; height:180px }
+    .bow{ width:96px; height:48px }
+    .birthday-text{ font-size:34px }
+    .label{ font-size:16px }
+  }
+
+  /* Subtle instruction text */
+  .hint{
+    margin-top:8px;
+    font-size:13px;
+    color: rgba(255,255,255,0.85);
+    opacity:0.92;
+    font-weight:500;
+  }
+
+  /* Lid-open state */
+  .open .lid{
+    transform: rotateX(-75deg) translateY(-6%);
+  }
+  .open .box{
+    transform: translateY(6px);
+  }
+
+</style>
+</head>
+<body>
+  <canvas id="fwCanvas"></canvas>
+
+  <div class="stage" aria-hidden="false">
+    <div class="gift-wrap" id="gift" role="button" aria-label="Gift box. Tap to open.">
+      <div class="box" id="box">
+        <div class="lid" id="lid">
+          <div class="bow" aria-hidden="true">
+            <div class="loop left"></div>
+            <div class="loop right"></div>
+            <div class="knot"></div>
+          </div>
+        </div>
+
+        <div class="base">
+          <div class="ribbon-vertical" aria-hidden="true"></div>
+          <div class="ribbon-horizontal" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="label">Gift for Chhota Don</div>
+    <div class="hint">Tap / Click the gift to open</div>
+
+    <div class="birthday-text" id="birthdayText">Happy Birthday Avni 🎉</div>
+  </div>
+
+<script>
+/* ====== ELEMENTS ====== */
+const gift = document.getElementById('gift');
+const box = document.getElementById('box');
+const lid = document.getElementById('lid');
+const birthdayText = document.getElementById('birthdayText');
+const canvas = document.getElementById('fwCanvas');
+const ctx = canvas.getContext('2d');
+
+/* ====== RESIZE CANVAS ====== */
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+/* ====== FIREWORKS ENGINE (simple particle explosions) ====== */
+let fireworks = [];
+let particles = [];
+const gravitational = 0.06;
+
+function rand(min,max){ return Math.random()*(max-min)+min; }
+
+/* 
+  Improved spawnFirework:
+  - increased particle count
+  - increased speed range
+  - increased life & size range
+  This gives a more powerful 'boom' look.
+*/
+function spawnFirework(x,y){
+  const count = Math.floor(rand(40,80)); // increased
+  const hue = rand(0,360);
+  for(let i=0;i<count;i++){
+    particles.push({
+      x:x, y:y,
+      vx: Math.cos(i*(Math.PI*2/count)) * rand(2.5,8.5), // more speed
+      vy: Math.sin(i*(Math.PI*2/count)) * rand(2.5,8.5),
+      life: rand(60,140), // longer life
+      age:0,
+      size: rand(2.2,5.2), // bigger size
+      hue: (hue + rand(-40,40))|0
+    });
+  }
+
+  // Extra twin mini-bursts for richer effect
+  // two smaller quick bursts slightly offset
+  const twinCount = Math.floor(rand(8,16));
+  for(let j=0;j<2;j++){
+    const angleOffset = rand(-0.4,0.4);
+    for(let i=0;i<twinCount;i++){
+      const a = i*(Math.PI*2/twinCount) + angleOffset;
+      particles.push({
+        x:x + rand(-8,8),
+        y:y + rand(-8,8),
+        vx: Math.cos(a) * rand(1.5,4.5),
+        vy: Math.sin(a) * rand(1.5,4.5),
+        life: rand(40,90),
+        age:0,
+        size: rand(1.6,3.2),
+        hue: (hue + rand(-60,60))|0
+      });
+    }
+  }
+}
+
+/* update and draw */
+function updateParticles(){
+  for(let i = particles.length-1; i>=0; i--){
+    const p = particles[i];
+    p.age++;
+    // slightly stronger gravity on older particles to make nice arcs
+    p.vy += gravitational * (1 + p.age/120);
+    p.x += p.vx;
+    p.y += p.vy;
+    // slight air resistance
+    p.vx *= 0.998;
+    p.vy *= 0.998;
+    if(p.age > p.life) particles.splice(i,1);
+  }
+}
+function drawParticles(){
+  for(const p of particles){
+    const alpha = Math.max(0, 1 - p.age/p.life);
+    ctx.beginPath();
+    // radial glow effect using multiple arcs (cheap)
+    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, Math.max(6, p.size*4));
+    grad.addColorStop(0, `hsla(${p.hue},100%,85%,${alpha*0.95})`);
+    grad.addColorStop(0.4, `hsla(${p.hue},90%,60%,${alpha*0.7})`);
+    grad.addColorStop(1, `hsla(${p.hue},80%,40%,${alpha*0.05})`);
+    ctx.fillStyle = grad;
+    ctx.arc(p.x,p.y,p.size*1.2,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+/* animation loop */
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // translucent overlay for trails
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  updateParticles();
+  drawParticles();
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* periodically spawn random fireworks when active */
+let fireworksInterval = null;
+function startFireworks(){
+  if(fireworksInterval) return;
+  fireworksInterval = setInterval(()=>{
+    const x = rand(100, window.innerWidth-100);
+    const y = rand(80, window.innerHeight/2);
+    spawnFirework(x,y);
+    // occasional double-trigger near edges for variety
+    if(Math.random() > 0.6) spawnFirework(Math.max(80, Math.min(window.innerWidth-80, x + rand(-120,120))), y + rand(-40,40));
+  }, 520); // slightly quicker bursts
+}
+function stopFireworks(){
+  clearInterval(fireworksInterval);
+  fireworksInterval = null;
+}
+
+/* ====== CONFETTI GENERATOR ====== */
+const CONFETTI_COLORS = ['#ff5f6d','#ffc371','#9be15d','#00c9ff','#a18cd1'];
+
+function createConfettiPiece(x,y){
+  const el = document.createElement('div');
+  el.className = 'confetti';
+  const w = rand(8,14);
+  const h = rand(12,20);
+  el.style.width = w + 'px';
+  el.style.height = h + 'px';
+  // ensure absolute positioning for animation
+  el.style.position = 'absolute';
+  el.style.left = (x - w/2) + 'px';
+  el.style.top = (y - h/2) + 'px';
+  el.style.background = CONFETTI_COLORS[Math.floor(rand(0,CONFETTI_COLORS.length))];
+  el.style.transform = `rotate(${rand(0,360)}deg) translateY(0px)`;
+  el.style.opacity = '1';
+  document.body.appendChild(el);
+
+  // animate with JS (fall + rotate + slight float)
+  const vx = rand(-3,3);
+  const vy = rand(2,7);
+  const rotSpeed = rand(-8,8);
+  let life = 0;
+  function frame(){
+    life++;
+    const curTop = parseFloat(el.style.top);
+    const curLeft = parseFloat(el.style.left);
+    el.style.top = (curTop + vy + (life*0.04)) + 'px';
+    el.style.left = (curLeft + vx + Math.sin(life/6)) + 'px';
+    el.style.transform = `rotate(${rotSpeed * life}deg)`;
+    el.style.opacity = Math.max(0, 1 - life/160);
+    if(life > 200){
+      el.remove();
+    } else {
+      requestAnimationFrame(frame);
+    }
+  }
+  // small delay to make them pop out more naturally
+  requestAnimationFrame(frame);
+}
+
+/* spawn many confetti from box center */
+function burstConfettiFromBox(){
+  const rect = gift.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const amount = 60; // keeping this as in your original file
+  for(let i=0;i<amount;i++){
+    setTimeout(()=> createConfettiPiece(cx + rand(-30,30), cy + rand(-40,20)), Math.random()*220);
+  }
+}
+
+/* ====== OPEN SEQUENCE ====== */
+let opened = false;
+function openGift(){
+  if(opened) return;
+  opened = true;
+
+  // animate lid & box (CSS class)
+  gift.classList.add('open');
+
+  // VIBRATION: vibrate briefly if device supports it
+  try{
+    if(navigator.vibrate){
+      // pattern: vibrate - pause - vibrate; short but noticeable
+      navigator.vibrate([200, 80, 200]);
+    }
+  }catch(e){
+    // ignore if not supported or blocked
+  }
+
+  // small delay -> confetti + fireworks + pop text
+  setTimeout(()=>{
+    burstConfettiFromBox();
+    startFireworks();
+
+    // also create an intentional burst of fireworks at the box point (stronger)
+    const rect = gift.getBoundingClientRect();
+    spawnFirework(rect.left + rect.width/2, rect.top + rect.height/2 - 40);
+
+    // show birthday text jumping out
+    birthdayText.classList.add('pop');
+
+    // after jump animation, zoom to full screen glowing text
+    setTimeout(()=> {
+      birthdayText.classList.add('full');
+
+      // KEEP the text full-screen & visible for 5 seconds, then fade out and stop fireworks
+      setTimeout(()=> {
+        // fade out the text smoothly
+        birthdayText.style.transition = "opacity 800ms ease";
+        birthdayText.style.opacity = 0;
+        // stop fireworks after a slight delay so the fade feels natural
+        setTimeout(()=> {
+          stopFireworks();
+        }, 900);
+      }, 5000); // 5 seconds visible
+
+    }, 1000); // 1s after pop started
+  }, 480);
+}
+
+/* support both click and touch */
+gift.addEventListener('click', openGift);
+gift.addEventListener('touchstart', (e)=>{
+  e.preventDefault();
+  openGift();
+}, {passive:false});
+
+
+/* ====== optional: small hover jiggle to invite tap (disabled after open) ====== */
+let wiggleInterval = null;
+function startWiggle(){
+  if(opened) return;
+  let dir = 1;
+  wiggleInterval = setInterval(()=>{
+    box.style.transform = `rotate(${dir * 2}deg)`;
+    dir *= -1;
+  }, 700);
+}
+function stopWiggle(){
+  clearInterval(wiggleInterval);
+  wiggleInterval = null;
+  box.style.transform = '';
+}
+startWiggle();
+gift.addEventListener('click', stopWiggle);
+
+/* Accessibility: allow Enter/Space to open */
+gift.setAttribute('tabindex', '0');
+gift.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    openGift();
+  }
+});
+
+</script>
+</body>
+</html>
